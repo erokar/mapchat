@@ -1,18 +1,19 @@
+
+
 Meteor.methods
   
   "addPosition" : (coords) ->
     console.log("inserting position " + coords.latitude)
-    #this.session.socket.on "close", ->
-    if Meteor.status().staus is "offline"
-      user = Meteor.userId
-      console.log("DISCONNET " + user)
-    Positions.insert( { "coordinates" : coords} )
+    id = Positions.insert( { "coordinates" : coords} )
+    console.log id
+    return id
 
   "clientConnect" : ->
     console.log("Connected")
 
-  "clientDisconnect" : ->
-    console.log("Client disconnected")
+  "clientDisconnect" : (id) ->
+    Positions.remove( { _id: id } )
+    console.log("Position removed " + id)
 
 
 
