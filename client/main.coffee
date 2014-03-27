@@ -1,37 +1,60 @@
 
 
+class Map
+
+  constructor: (coords, @mapDiv) ->
+    @position = new google.maps.LatLng(coords.latitude, coords.longitude)
+    mapOptions =
+      zoom: 14
+      center: @position
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    @map = new google.maps.Map(@mapDiv, mapOptions)
+
+  drawMarker: (coords, peers = false) ->
+    pinImage = undefined
+    pinShadow = undefined
+    if peers
+      pinColor = "fcf357"
+      pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0,0),
+        new google.maps.Point(10, 34))
+      pinShadow = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_shadow",
+        new google.maps.Size(40, 37),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12, 35))
+    latLong = new google.maps.LatLng(coords.latitude, coords.longitude)
+    marker = new google.maps.Marker
+      position: latLong
+      map: @map
+      title: "You"
+      icon: pinImage
+      shadow: pinShadow
+    @marker = marker
+
+  drawInfo: (content) ->
+    infoWindowOptions =
+      content: content
+      position: @position
+    infoWindow = new google.maps.InfoWindow(infoWindowOptions)
+    google.maps.event.addListener(@marker, "click", -> infoWindow.open(@map))
+
+    
+  drawCircle: (radius) ->
+    circle = new google.maps.Circle
+      map: @map
+      fillColor : '#BBD8E9'
+      fillOpacity : 0.6
+      radius : radius
+      strokeColor : '#BBD8E9'
+      strokeOpacity : 0.9
+      strokeWeight : 2
+    circle.bindTo('center', @marker, 'position')  
 
 
-addMarker = (map, latlong, title, content) ->
-  markerOptions =
-    position: latlong
-    map: @map
-    title: title
-    clickable: true
-  marker = new google.maps.Marker(markerOptions)
-  infoWindowOptions =
-    content: content
-    position: latlong
-  infoWindow = new google.maps.InfoWindow(infoWindowOptions)
-  google.maps.event.addListener(marker, "click", -> infoWindow.open(@map))
+# *************
 
-
-
-# Position Position -> Number
-# computes distance between to locations in kilometers
-computeDistance = (startCoords, destCoords) ->
-  
-  degreesToRadians = (degrees) ->
-    radians = (degrees * Math.PI) / 180 
-    return radians
-  
-  startLatRads = degreesToRadians(startCoords.latitude)
-  startLongRads = degreesToRadians(startCoords.longitude)
-  destLatRads = degreesToRadians(destCoords.latitude)
-  destLongRads = degreesToRadians(destCoords.longitude)
-  Radius = 6371 # radius of the Earth in km
-  distance = Math.acos(Math.sin(startLatRads) * Math.sin(destLatRads) + Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads)) * Radius
-  return distance
+@radius = 500
 
 locationError = (error) ->
   errorTypes =
@@ -44,52 +67,21 @@ locationError = (error) ->
     errorMessage += " " + error.message
   throwError(errorMessage)
 
-@radiusVal = 500
-
-showMap = (coords) ->
-  googlePosition = new google.maps.LatLng(coords.latitude, coords.longitude)
-  mapOptions =
-    zoom: 14
-    center: googlePosition
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  mapDiv = document.getElementById("googleMap")
-  @map = new google.maps.Map(mapDiv, mapOptions)
-  marker = new google.maps.Marker
-    position: googlePosition
-    map: @map
-    title: "Center of Map"
-  circle = new google.maps.Circle
-    map: @map
-    fillColor : '#BBD8E9'
-    fillOpacity : 0.6
-    radius : @radiusVal
-    strokeColor : '#BBD8E9'
-    strokeOpacity : 0.9
-    strokeWeight : 2
-  circle.bindTo('center', marker, 'position')
-
-  #title = "Your location"
-  #content = "You are here: " + coords.latitude + ", " + coords.longitude
-  #addMarker(@map, googlePosition, title, content)
-  #marker.setAllMap(null)
-
-
-
 displayLocation = (position) ->
-  latitude = position.coords.latitude
-  longitude = position.coords.longitude
-  div = document.getElementById("location")
-  div.innerHTML = "You are at Latitude: " + latitude + ", Longitude: " + longitude
-  # TODO: 
-  # Få andre posisjoner i nærheten, send til showMap, dipslay dem på mappen
+  map = new Map(position.coords, document.getElementById("googleMap"))
+  map.drawMarker(position.coords)
+  map.drawCircle(@radius)
+  map.drawInfo("FART") # TODO: User name
+  
+  Meteor.subscribe "positions", position.coords, @radius, ->
+    Positions.find().forEach (pos) ->
+      console.log("called")
+      map.drawMarker(pos.coordinates, peers = true)
+  
   Meteor.call( "addPosition", position.coords, (error, result) ->
     Session.set("positionId", result)
     console.log("ID: " + Session.get("positionId"))
-    )
-  showMap(position.coords) #if not @map
-
-
-
+  )
 
 window.onload = ->
   if navigator.geolocation
@@ -104,7 +96,6 @@ window.onload = ->
 window.onbeforeunload = -> Meteor.call("clientDisconnect", Session.get("positionId"))
 
 
-Meteor.subscribe("positions")
 
 
 

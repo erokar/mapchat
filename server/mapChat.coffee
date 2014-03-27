@@ -19,5 +19,5 @@ Meteor.methods
 
 
 
-
+#console.log("Radius: " + @radius)
 
