@@ -13,15 +13,17 @@
     <div class="container">
       <div id="main" class="row-fluid">
         <div class="row">
-
+          <div class="col-lg-6">
             {{> map}}
-            {{> newMessage}}
-          
-            
           </div>
+          <div class="col-lg-6">
+            {{> messages}}
+          </div>
+        </div>
+        {{> newMessage}}
       </div>
       </div>
     </div>
-  </div>
+  
   {{googleMaps}}
 </body>

@@ -8,6 +8,9 @@ Meteor.methods
     console.log id
     return id
 
+  "addMessage" : (name, message, coords) ->
+    Messages.insert( { sender: name, message: message, position: coords })
+
   "clientConnect" : ->
     console.log("Connected")
 

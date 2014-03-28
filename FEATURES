@@ -1,3 +1,31 @@
+
+Hver gang bruker legger til eller endrer nick:
+	- oppdatere collection active users: fjern current nick i Session hvis noe, legg til aktuelt nick
+	- session user settes til nicket
+	- bruk så user collection på klientside til å oppdatere pins på kartet
+
+***
+
 Kanskje en chat-bot som popper opp hvis det ikke er andre der. Modellere etter Eliza. Kan spørre boten om ting, f.eks. hva som er kult å gjøre i området, utesteder etc.
 
 Men nei, tror dette skal være tagging, så derfor er det en Kilroybot som har vært over hele verde, eller som dukker opp der det er noen og tagger noe der.
+
+
+***
+Tonje Hansen som går rundt der, skal kjøpe seg pølse.
+
+Hun kan beskrive området, veit hvordan vær det er.
+
+Hun har lest sin Schopenhauer. Hun er redd for å bli feit. Eller kanskje hun omfavner det.
+
+Hun liker ikke denne byen. Hun vil hjem til... hvor enn hun er fra. Bodø kanskje.
+
+Hun brenner hull i plastflaskene før hun panter dem. Hun er forbanna på samfunnet.
+
+*
+
+Twitter-bot kunstprosjekt.
+
+***
+
+Hva om man sendte agenter rundt på kartet og fikk dem til å sjekke ting for seg? Hva slags ting man ikke kan sjekke ellers? F.eks. få dem til å sjekke tilbud, altså der man må søke andre steder. Ok, men veldig kompleks, ikke gå over bord. 
