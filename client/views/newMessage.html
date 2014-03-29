@@ -1,5 +1,43 @@
 <template name="newMessage">
   <div class="row">
+  <div class="col-lg-12">
+    
+      <form class="form-horizontal">
+        <fieldset>
+          <div class="form-group">
+            <label for="textArea" class="col-lg-2 control-label">Message</label>
+            <div class="col-lg-10">
+              <textarea class="form-control" rows="3" id="inputMessage" placeholder="Your message..."></textarea>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputGroupName" class="col-lg-2 control-label">Nickname</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="inputName" placeholder="Nickname">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <div class="col-lg-10 col-lg-offset-2">
+              <button type="submit" class="btn btn-primary" id="newGroup">Send</button>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    {{> errors}}
+  </div>
+</div>
+</template>
+
+
+
+
+
+
+
+<!-- <template name="newMessage">
+  <div class="row">
   <div class="col-lg-6">
     <div class="well bs-component">
       <form class="form-horizontal">
@@ -30,4 +68,4 @@
     {{> errors}}
   </div>
 </div>
-</template>
+</template> -->
