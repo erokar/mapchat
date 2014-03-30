@@ -1,7 +1,4 @@
-
-
-
-locationError = (error) ->
+@locationError = (error) ->
   errorTypes =
     0: "Unknown error"
     1: "Permission denied by user"
@@ -18,34 +15,34 @@ locationError = (error) ->
   @map.drawMarker(position.coords)
   @map.drawCircle(Session.get("radius"))
 
-  #Users.find().forEach (user) ->                             ## DENNE MÅ VÆRE REAKTIV. Kjøre hver gang db oppdateres.
-    #if not @map.samePosition(position.coords) 
-    #@map.drawPeerMarker(position.coords)
-    #console.log user.name
-  # map.darwInfo("userName") TODO: User name
-  ###Deps.autorun ->
-  Users.find().forEach (user) -> 
-    console.log user.name
-    @map.drawPeerMarker(position.coords)###
 
-
-
-
-
-#Deps.autorun ->
-#Meteor.subscribe("messages")
-#Meteor.subscribe("users")
-
+@closingWindow = (message) ->
+  alert(message)
+  Meteor.call("removeUser", Session.get("name"))
 
 
 Meteor.startup ->
 
   Session.set("radius", 100)
-
   Meteor.subscribe("messages")
   Meteor.subscribe("users")
+  
+  $(window).bind "unload", ->
+    closingWindow("unload")
+    return null
 
-  window.onload = ->
+  $(window).bind "beforeunload", ->
+    closingWindow("beforeunload")
+    return null
+
+  $(window).bind "onbeforeunload", ->
+    closingWindow("beforeunload")
+    return null
+
+  $(window).bind "onunload", ->
+    closingWindow("onunload")
+    return null
+
   if navigator.geolocation
     options =
       enableHighAccuracy: true
@@ -53,26 +50,9 @@ Meteor.startup ->
     navigator.geolocation.getCurrentPosition(displayLocation, locationError, options)
   else
     throwError("You need geolocation enabled to use this app.")
-  #Meteor.call("clientConnect")
-
-
-window.onbeforeunload = ->
-  Meteor.call("removeUser", Session.get("name"))
-
-######
-
-  #Meteor.call("clientDisconnect", Session.get("positionId"))
 
 
 
 
-###  Meteor.subscribe "positions", position.coords, @radius, ->
-    Positions.find().forEach (pos) ->
-      console.log("called")
-      map.drawMarker(pos.coordinates, peers = true)
-###  
-###  Meteor.call( "addPosition", position.coords, (error, result) ->
-    Session.set("positionId", result)
-    console.log("ID: " + Session.get("positionId"))
-  )###
+
 

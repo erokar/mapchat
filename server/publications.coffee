@@ -4,3 +4,4 @@ Meteor.publish "messages", ->
 
 Meteor.publish "users", ->
   return Users.find()
+

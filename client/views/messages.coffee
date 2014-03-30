@@ -16,7 +16,7 @@ Template.messages.messages = ->
       distance = Math.acos(Math.sin(startLatRads) * Math.sin(destLatRads) + Math.cos(startLatRads) * Math.cos(destLatRads) * Math.cos(startLongRads - destLongRads)) * Radius
       return distance * 1000
   
-    if distance(Session.get("coords"), m.position) < Session.get("radius")
+    if distance(Session.get("coords"), m.position) < Math.min(m.radius, Session.get("radius"))
       messages.push m
   
-  return messages
+  return messages[-20..]
