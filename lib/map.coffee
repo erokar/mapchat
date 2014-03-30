@@ -6,7 +6,7 @@ class @Map
     @coords = coords
     @position = new google.maps.LatLng(coords.latitude, coords.longitude)
     zoom =
-      100: 16
+      100: 17
       500: 14
       1000: 13
       5000: 11
@@ -14,7 +14,7 @@ class @Map
     mapOptions =
       zoom: zoom[Session.get("radius")] #parseInt(Session.get("radius") / 10)
       center: @position
-      mapTypeId: google.maps.MapTypeId.ROADMAP
+      mapTypeId: google.maps.MapTypeId.SATELLITE
     @map = new google.maps.Map(@mapDiv, mapOptions)
 
   samePosition: (coords) ->
